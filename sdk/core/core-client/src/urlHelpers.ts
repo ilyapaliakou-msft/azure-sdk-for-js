@@ -113,6 +113,7 @@ function appendPath(url: string, pathToAppend?: string): string {
 
   const parsedUrl = new URL(url);
   let newPath = parsedUrl.pathname;
+  let newSearch = parsedUrl.search;
 
   if (!newPath.endsWith("/")) {
     newPath = `${newPath}/`;
@@ -128,15 +129,13 @@ function appendPath(url: string, pathToAppend?: string): string {
     const search = pathToAppend.substring(searchStart + 1);
     newPath = newPath + path;
     if (search) {
-      parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search;
+      newSearch = newSearch ? `${newSearch}&${search}` : `?${search}`;
     }
   } else {
     newPath = newPath + pathToAppend;
   }
 
-  parsedUrl.pathname = newPath;
-
-  return parsedUrl.toString();
+  return `${parsedUrl.origin}${newPath}${newSearch}${parsedUrl.hash}`;
 }
 
 function calculateQueryParameters(

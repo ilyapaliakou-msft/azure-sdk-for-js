@@ -1,14 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "#platform/types";
 import type {
   EventMessage,
   EventMessageStream,
   NodeJSReadableStream,
-  PartialSome,
 } from "./models.js";
 import { createStream, ensureAsyncIterable } from "./utils.js";
+
+type PartialSome<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 enum ControlChars {
   NewLine = 10,

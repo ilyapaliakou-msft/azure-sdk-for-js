@@ -40,7 +40,5 @@ export function objectHasProperty<Thing, PropertyName extends string>(
   thing: Thing,
   property: PropertyName,
 ): thing is Thing & Record<PropertyName, unknown> {
-  return (
-    isDefined(thing) && typeof thing === "object" && property in (thing as Record<string, unknown>)
-  );
+  return typeof thing === "object" && thing !== null && property in thing;
 }

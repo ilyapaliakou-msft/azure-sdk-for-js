@@ -62,9 +62,9 @@
     "lint": "eslint package.json src test",
     "lint:fix": "eslint package.json src test --fix --fix-type [problem,suggestion]",
     "pack": "pnpm pack 2>&1",
-    "test": "npm run test:node && npm run test:browser",
-    "test:browser": "npm run clean && dev-tool run build-package && dev-tool run build-test && dev-tool run test:vitest --no-test-proxy --browser",
-    "test:node": "dev-tool run build-test --no-browser-test && dev-tool run test:vitest --no-test-proxy",
+    "test": "tsc -b --noEmit && npm run test:node && npm run test:browser",
+    "test:browser": "dev-tool run test:vitest --no-test-proxy --browser",
+    "test:node": "dev-tool run test:vitest --no-test-proxy",
     "update-snippets": "dev-tool run update-snippets"
   },
   "//metadata": {
@@ -110,5 +110,21 @@
     "typescript": "catalog:",
     "vitest": "catalog:testing"
   },
-  "module": "./dist/esm/index.js"
+  "module": "./dist/esm/index.js",
+  "imports": {
+    "#platform/userAgent": {
+      "browser": "./src/util/userAgentPlatform-browser.mts",
+      "react-native": "./src/util/userAgentPlatform-react-native.mts",
+      "default": "./src/util/userAgentPlatform.ts"
+    },
+    "#platform/wrapAbortSignal": {
+      "react-native": "./src/util/wrapAbortSignal-rn.mts",
+      "default": "./src/util/wrapAbortSignal.ts"
+    },
+    "#platform/createFile": {
+      "browser": "./src/util/createFile-browser.mts",
+      "react-native": "./src/util/createFile-browser.mts",
+      "default": "./src/util/createFile.ts"
+    }
+  }
 }
