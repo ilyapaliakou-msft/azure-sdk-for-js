@@ -3,9 +3,13 @@
 
 import type { CreateFileOptions } from "./file.js";
 
+function hasArrayBuffer(source: Uint8Array): source is Uint8Array<ArrayBuffer> {
+  return "resize" in source.buffer;
+}
+
 function toArrayBuffer(source: Uint8Array): Uint8Array<ArrayBuffer> {
-  if ("resize" in source.buffer) {
-    return source as Uint8Array<ArrayBuffer>;
+  if (hasArrayBuffer(source)) {
+    return source;
   }
   // SharedArrayBuffer — copy to a regular ArrayBuffer
   return source.map((x) => x);

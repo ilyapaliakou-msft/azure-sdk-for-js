@@ -24,8 +24,3 @@ export type EventMessageStream = ReadableStream<EventMessage> &
   AsyncIterable<EventMessage>;
 
 export type { NodeJSReadableStream } from "#platform/types";
-
-/**
- * In Node.js, this is `http.IncomingMessage`. In browser/React Native, this is `never`.
- */
-export type { IncomingMessage } from "#platform/types";

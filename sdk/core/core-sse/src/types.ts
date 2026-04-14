@@ -23,7 +23,7 @@ export interface NodeJSReadableStream extends NodeJS.ReadableStream {
 export function cancelNodeStream(stream: NodeIncomingMessage | NodeJSReadableStream): void {
   if ("socket" in stream && stream.socket) {
     stream.socket.end();
-  } else {
-    (stream as NodeJSReadableStream).destroy();
+  } else if ("destroy" in stream) {
+    stream.destroy();
   }
 }

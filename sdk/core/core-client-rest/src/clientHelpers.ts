@@ -75,5 +75,10 @@ export function createDefaultPipeline(
 }
 
 function isKeyCredential(credential: unknown): credential is KeyCredential {
-  return typeof credential === "object" && credential !== null && "key" in credential;
+  return (
+    typeof credential === "object" &&
+    credential !== null &&
+    "key" in credential &&
+    typeof credential.key === "string"
+  );
 }
