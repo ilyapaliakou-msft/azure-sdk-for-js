@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 
 import { describe, it, assert } from "vitest";
-import { translate, MessagingError } from "$internal/errors.js";
-// Using $internal alias to import only errors.ts, avoiding the full index.js
-// which would pull in Node-only checkNetworkConnection module.
+import { translate, MessagingError } from "../../../src/errors.js";
 
 describe("translate - isBrowserWebsocketError (browser)", function () {
   it("translates a WebSocket error event into a MessagingError", function () {
