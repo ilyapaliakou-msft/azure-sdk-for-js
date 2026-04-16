@@ -76,6 +76,17 @@ describe("userAgentPlatform", () => {
     assert.isFalse(map.has("Bun"));
   });
 
+  it("should handle a process.versions with no known runtime", async () => {
+    (vi.mocked(process) as any).versions = { v8: "12.0.0" };
+    const map = new Map<string, string>();
+
+    await setPlatformSpecificData(map);
+
+    assert.isFalse(map.has("Node"));
+    assert.isFalse(map.has("Deno"));
+    assert.isFalse(map.has("Bun"));
+  });
+
   it("should handle a Node.js process.versions", async () => {
     (vi.mocked(process) as any).versions = { node: "20.0.0" };
     const map = new Map<string, string>();
