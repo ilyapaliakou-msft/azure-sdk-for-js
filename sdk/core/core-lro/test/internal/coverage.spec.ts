@@ -1036,12 +1036,6 @@ describe("buildCreatePoller edge cases", () => {
     assert.equal(finalState.status, "succeeded");
   });
 
-  it.skip("handles pollUntilDone with notStarted/running status (unreachable defense)", async () => {
-    // This defensive branch (status "notStarted"/"running" after polling loop exit) is structurally unreachable through the public API.
-    // The pollUntilDone loop condition checks isDone (!isPending), and isDone only becomes true when status is
-    // "succeeded", "failed", or "canceled". Therefore, if isDone is true, status cannot be "notStarted" or "running".
-  });
-
   it("handles poll with !state guard (defense check)", async () => {
     // Test the !state guards at lines 107 and 155 by making init resolve without setting state
     const createPoller = buildCreatePoller<any, any, OperationState<any>>({
@@ -1070,11 +1064,6 @@ describe("buildCreatePoller edge cases", () => {
     assert.isDefined(state);
   });
 
-  it.skip("handles pollUntilDone notStarted/running terminal case", async () => {
-    // This defensive branch (status "notStarted"/"running" after polling loop exit) is structurally unreachable through the public API.
-    // The pollUntilDone loop condition checks isDone (!isPending), and isDone only becomes true when status is
-    // "succeeded", "failed", or "canceled". Therefore, if isDone is true, status cannot be "notStarted" or "running".
-  });
 });
 
 describe("pollHttpOperation without processResult", () => {
