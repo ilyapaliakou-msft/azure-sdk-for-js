@@ -921,19 +921,48 @@ describe("cbs.ts - onSessionError callback", () => {
 });
 
 describe("checkNetworkConnection - DNS error codes", () => {
-  it("calls dns.resolve and returns a boolean", async () => {
-    const { checkNetworkConnection } = await import("../../src/util/checkNetworkConnection.js");
-    // Use a hostname that should be resolvable in most environments
-    const result = await checkNetworkConnection("dns.google");
-    assert.isBoolean(result);
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.resetModules();
   });
 
-  it("handles DNS resolution for invalid hostnames", async () => {
+  it("returns true when DNS resolves successfully", async () => {
+    vi.doMock("node:dns", () => ({
+      CONNREFUSED: "ECONNREFUSED",
+      TIMEOUT: "ETIMEOUT",
+      resolve: (_host: string, cb: (err: any) => void) => {
+        cb(null);
+      },
+    }));
     const { checkNetworkConnection } = await import("../../src/util/checkNetworkConnection.js");
-    // This will trigger the DNS error path (likely ENOTFOUND, not CONNREFUSED/TIMEOUT)
-    // so it returns true (since ENOTFOUND is not in the list of network-down codes)
-    const result = await checkNetworkConnection("thishostdefinitelydoesnotexist12345.invalid");
-    assert.isBoolean(result);
+    const result = await checkNetworkConnection("example.com");
+    assert.isTrue(result);
+  });
+
+  it("returns false when DNS fails with ECONNREFUSED", async () => {
+    vi.doMock("node:dns", () => ({
+      CONNREFUSED: "ECONNREFUSED",
+      TIMEOUT: "ETIMEOUT",
+      resolve: (_host: string, cb: (err: any) => void) => {
+        cb({ code: "ECONNREFUSED" });
+      },
+    }));
+    const { checkNetworkConnection } = await import("../../src/util/checkNetworkConnection.js");
+    const result = await checkNetworkConnection("example.com");
+    assert.isFalse(result);
+  });
+
+  it("returns true when DNS fails with ENOTFOUND", async () => {
+    vi.doMock("node:dns", () => ({
+      CONNREFUSED: "ECONNREFUSED",
+      TIMEOUT: "ETIMEOUT",
+      resolve: (_host: string, cb: (err: any) => void) => {
+        cb({ code: "ENOTFOUND" });
+      },
+    }));
+    const { checkNetworkConnection } = await import("../../src/util/checkNetworkConnection.js");
+    const result = await checkNetworkConnection("example.com");
+    assert.isTrue(result);
   });
 });
 

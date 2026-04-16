@@ -273,7 +273,7 @@ describe("tracingPolicy - additional coverage", function () {
     assert.isTrue(span.endCalled);
   });
 
-  it("does not set http.user_agent attribute when userAgent is empty", async () => {
+  it("sets http.user_agent attribute to an empty string when userAgent is empty", async () => {
     // Mock getUserAgentValue to return empty string to exercise the false branch of `if (userAgent)`
     vi.mocked(getUserAgentValue).mockResolvedValue("");
 

@@ -1,12 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { describe, it, assert } from "vitest";
+import { describe, it, assert, vi } from "vitest";
 import { getUserAgentValue, getUserAgentHeaderName } from "../../../src/util/userAgent.js";
 
 // Access the internal getUserAgentString logic through getUserAgentValue
 // by mocking setPlatformSpecificData to add an entry with an empty value
-import { vi } from "vitest";
 
 vi.mock("../../../src/util/userAgentPlatform.js", async (importOriginal) => {
   const original = await importOriginal<typeof import("../../../src/util/userAgentPlatform.js")>();

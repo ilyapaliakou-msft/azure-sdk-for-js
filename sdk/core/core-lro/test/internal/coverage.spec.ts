@@ -1036,29 +1036,10 @@ describe("buildCreatePoller edge cases", () => {
     assert.equal(finalState.status, "succeeded");
   });
 
-  it("handles pollUntilDone with notStarted/running status (unreachable defense)", async () => {
-    // This tests the case where polling finishes but status is still "running"
-    // which should throw "Polling completed without succeeding or failing"
-    let pollCount = 0;
-    const createPoller = buildCreatePoller<any, any, OperationState<any>>({
-      getStatusFromInitialResponse: () => "running",
-      getStatusFromPollResponse: () => {
-        pollCount++;
-        // Return "running" always - but mark isDone via the custom isDone
-        return "running";
-      },
-      isOperationError: () => false,
-      getResourceLocation: () => undefined,
-      resolveOnUnsuccessful: false,
-    });
-
-    // We can't easily force isDone = true while status = "running" through createTestPoller
-    // but we can test the defense by constructing a scenario where the loop ends
-    // Actually the notStarted/running case is truly unreachable in normal usage since
-    // pollUntilDone loops while !isDone. This branch only runs if somehow isDone becomes
-    // true while status is still running/notStarted which can't happen normally.
-    // Let's skip this and accept it can't be tested without modifying source.
-    assert.isTrue(true);
+  it.skip("handles pollUntilDone with notStarted/running status (unreachable defense)", async () => {
+    // This defensive branch (status "notStarted"/"running" after polling loop exit) is structurally unreachable through the public API.
+    // The pollUntilDone loop condition checks isDone (!isPending), and isDone only becomes true when status is
+    // "succeeded", "failed", or "canceled". Therefore, if isDone is true, status cannot be "notStarted" or "running".
   });
 
   it("handles poll with !state guard (defense check)", async () => {
@@ -1089,14 +1070,10 @@ describe("buildCreatePoller edge cases", () => {
     assert.isDefined(state);
   });
 
-  it("handles pollUntilDone notStarted/running terminal case", async () => {
-    // Line 144: This branch is a defensive guard. It fires when:
-    // 1. The polling loop finishes (isDone becomes true)
-    // 2. But state.status is still "notStarted" or "running"
-    // This is logically impossible: isDone checks ["succeeded","failed","canceled"].includes(status)
-    // So if isDone is true, status must be succeeded/failed/canceled, never notStarted/running.
-    // This guard is unreachable in normal code flow.
-    assert.isTrue(true);
+  it.skip("handles pollUntilDone notStarted/running terminal case", async () => {
+    // This defensive branch (status "notStarted"/"running" after polling loop exit) is structurally unreachable through the public API.
+    // The pollUntilDone loop condition checks isDone (!isPending), and isDone only becomes true when status is
+    // "succeeded", "failed", or "canceled". Therefore, if isDone is true, status cannot be "notStarted" or "running".
   });
 });
 

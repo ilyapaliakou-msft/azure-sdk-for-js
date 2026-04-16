@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { afterEach, assert, describe, it, vi } from "vitest";
-import { delay } from "../../src/index.js";
-import { calculateRetryDelay } from "../../src/delay.js";
+import { delay, calculateRetryDelay } from "../../src/index.js";
 
 describe("delay", function () {
   afterEach(function () {
